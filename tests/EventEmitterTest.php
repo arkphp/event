@@ -9,9 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Evenement\Tests;
+namespace Ark\Event\Tests;
 
-use Evenement\EventEmitter;
+use Ark\Event\EventEmitter;
+
+class Listener
+{
+    public function onFoo()
+    {
+    }
+    public static function onBar()
+    {
+    }
+}
 
 class EventEmitterTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +45,7 @@ class EventEmitterTest extends \PHPUnit_Framework_TestCase
 
     public function testAddListenerWithStaticMethod()
     {
-        $this->emitter->on('bar', ['Evenement\Tests\Listener', 'onBar']);
+        $this->emitter->on('bar', ['Ark\Event\Tests\Listener', 'onBar']);
     }
 
     public function testAddListenerWithInvalidListener()
