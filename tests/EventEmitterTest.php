@@ -170,7 +170,7 @@ class EventEmitterTest extends \PHPUnit_Framework_TestCase
         };
 
         $this->emitter->on('foo', $listener);
-        $this->emitter->removeListener('foo', $listener);
+        $this->emitter->off('foo', $listener);
 
         $this->assertSame(0, $listenersCalled);
         $this->emitter->emit('foo');
@@ -186,7 +186,7 @@ class EventEmitterTest extends \PHPUnit_Framework_TestCase
         };
 
         $this->emitter->on('foo', $listener);
-        $this->emitter->removeListener('bar', $listener);
+        $this->emitter->off('bar', $listener);
 
         $this->assertSame(0, $listenersCalled);
         $this->emitter->emit('foo');
@@ -201,7 +201,7 @@ class EventEmitterTest extends \PHPUnit_Framework_TestCase
             $listenersCalled++;
         });
 
-        $this->emitter->removeAllListeners('foo');
+        $this->emitter->off('foo');
 
         $this->assertSame(0, $listenersCalled);
         $this->emitter->emit('foo');
@@ -216,30 +216,25 @@ class EventEmitterTest extends \PHPUnit_Framework_TestCase
             $listenersCalled++;
         });
 
-        $this->emitter->removeAllListeners('bar');
+        $this->emitter->off('bar');
 
         $this->assertSame(0, $listenersCalled);
         $this->emitter->emit('foo');
         $this->assertSame(1, $listenersCalled);
     }
 
-    public function testRemoveAllListenersWithoutArguments()
+    public function testPriority()
     {
-        $listenersCalled = 0;
+        $data = [];
+        $this->emitter->on('priority', function () use (&$data) {
+            $data[] = 'low';
+        }, 100);
 
-        $this->emitter->on('foo', function () use (&$listenersCalled) {
-            $listenersCalled++;
-        });
+        $this->emitter->on('priority', function () use (&$data) {
+            $data[] = 'high';
+        }, 0);
 
-        $this->emitter->on('bar', function () use (&$listenersCalled) {
-            $listenersCalled++;
-        });
-
-        $this->emitter->removeAllListeners();
-
-        $this->assertSame(0, $listenersCalled);
-        $this->emitter->emit('foo');
-        $this->emitter->emit('bar');
-        $this->assertSame(0, $listenersCalled);
+        $this->emitter->emit('priority');
+        $this->assertEquals(['high', 'low'], $data);
     }
 }
