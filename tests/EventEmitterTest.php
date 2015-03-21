@@ -237,4 +237,21 @@ class EventEmitterTest extends \PHPUnit_Framework_TestCase
         $this->emitter->emit('priority');
         $this->assertEquals(['high', 'low'], $data);
     }
+
+    public function testPropagation()
+    {
+        $data = [];
+        $this->emitter->on('prop', function () use (&$data) {
+            $data[] = 'a';
+        }, 100);
+
+        $this->emitter->on('prop', function () use (&$data) {
+            $data[] = 'b';
+
+            return false;
+        }, 0);
+
+        $this->emitter->emit('prop');
+        $this->assertEquals(['b'], $data);
+    }
 }
