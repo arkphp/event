@@ -1,8 +1,14 @@
-# Event
+# Event [![Build Status](https://travis-ci.org/arkphp/event.png)](https://travis-ci.org/arkphp/event)
 
 Simple event dispatching library for PHP.
 
 This library is a fork from [igorw/evenement](https://github.com/igorw/evenement).
+
+## Installation
+
+```
+composer require ark/event
+```
 
 ## Usage
 
